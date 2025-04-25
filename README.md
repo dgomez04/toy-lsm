@@ -4,6 +4,7 @@ A minimal, educational implementation of a **Log-Structured Merge Tree** in Pyth
 
 # project structure
 
+```
 tiny-lsm-tree/
 ├── memtable.py         # in-memory key-value store
 ├── sstable.py          # immutable sorted disk file
@@ -14,4 +15,4 @@ tiny-lsm-tree/
 ├── test/
 │   └── test_lsm.py     # basic demo and validation script
 └── README.md
-
+```
