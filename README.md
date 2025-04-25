@@ -5,7 +5,7 @@ A minimal, educational implementation of a **Log-Structured Merge Tree** in Pyth
 # project structure
 
 ```
-tiny-lsm-tree/
+toy-lsm-tree/
 ├── memtable.py         # in-memory key-value store
 ├── sstable.py          # immutable sorted disk file
 ├── lsm_tree.py         # coordinates reads, writes, and flushes
