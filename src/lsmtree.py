@@ -5,12 +5,18 @@ from sstable import SSTable
 
 class LSMTree: 
     def __init__(self, data_dir='./data', memtable_size=1000):
+        self.data_dir = Path(data_dir)
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+
         self.memtable = Memtable(memtable_size)
         self.sstables = []
-        self.data_dir = Path(data_dir)
+        self.wal = WAL(self.data_dir / 'wal.txt')
 
-        self.data_dir.mkdir(parents=True, exist_ok=True)
+        for key, value in self.wal.replay():
+            self.memtable.put(key, value)
+
         self._load_sstables()
+        
 
     def put(self, key, value):
         self.memtable.put(key, value)
@@ -50,6 +56,8 @@ class LSMTree:
 
         SSTable.write(path, items) 
         self.sstables.insert(0,SSTable(path))
+        
+        self.wal.reset()
     
     def _load_sstables(self):
         self.sstables.clear()

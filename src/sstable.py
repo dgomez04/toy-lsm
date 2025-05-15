@@ -1,9 +1,6 @@
 from bisect import bisect_left, bisect_right
 
 class SSTable: 
-    '''
-    Immutable sorted string table, which means index can be constructed once and then reused across get and range scans.
-    '''
     def __init__(self, filepath): 
         self.filepath = filepath
         self._load_index()
