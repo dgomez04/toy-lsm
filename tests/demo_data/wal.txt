@@ -1,0 +1,4 @@
+key2|__<TOMBSTONE>__
+key4|__<TOMBSTONE>__
+key6|__<TOMBSTONE>__
+force_flush|1

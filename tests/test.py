@@ -1,5 +1,11 @@
+import sys
+import os
+
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import shutil
-from lsm_tree import LSMTree
+from lsmtree import LSMTree
 from constants import TOMBSTONE
 
 def reset_storage():
@@ -46,7 +52,7 @@ def main():
         print(f"{k} => {v}")
 
     print("\ncompacting sstables")
-    db2.compact()
+    db2._compact_sstables()
 
     print("\nrange scan after compaction")
     for k, v in db2.range("key0", "key9"):
