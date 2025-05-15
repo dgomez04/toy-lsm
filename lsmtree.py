@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 from memtable import Memtable
 from sstable import SSTable
+from wal import WAL
+from constants import TOMBSTONE
 
 class LSMTree: 
     def __init__(self, data_dir='./data', memtable_size=1000):
@@ -17,8 +19,8 @@ class LSMTree:
 
         self._load_sstables()
         
-
     def put(self, key, value):
+        self.wal.append(key, value)
         self.memtable.put(key, value)
         if self.memtable.is_full(): 
             self._flush_memtable()
@@ -33,6 +35,9 @@ class LSMTree:
             if val is not None: 
                 return val
         return None
+
+    def delete(self, key):
+        self.put(key, TOMBSTONE)
 
     def range(self, start, end):
         yielded_keys = set()

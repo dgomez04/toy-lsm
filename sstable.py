@@ -1,5 +1,5 @@
 from bisect import bisect_left, bisect_right
-
+from constants import TOMBSTONE
 class SSTable: 
     def __init__(self, filepath): 
         self.filepath = filepath
@@ -22,7 +22,9 @@ class SSTable:
             decoded = line.decode(errors='ignore').strip()
             if "|" in decoded: 
                 found, value = decoded.split("|", 1)
-                if found == key: 
+                if found == key:
+                    if value == TOMBSTONE:
+                        return None
                     return value
         return None
 
@@ -42,9 +44,8 @@ class SSTable:
                 decoded = line.decode(errors='ignore').strip()
                 if "|" in decoded: 
                     found, value = decoded.split("|", 1)
-                    if found == key: 
+                    if found == key and value != TOMBSTONE: 
                         yield(key, value)
-            
     
     def _load_index(self): 
         with open(self.filepath, 'rb') as f: 
