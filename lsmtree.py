@@ -83,3 +83,25 @@ class LSMTree:
         filename = f'sst_{next_id:06}.txt'
         return self.data_dir / filename
     
+    def _compact_sstables(self):
+        if len(self.sstables) < 2:
+            return
+        
+        tables_to_merge = self.sstables[-2:]\
+        merged = {}
+
+        for sstable in reversed(tables_to_merge):
+            for key, value in sstable.range("", "zzz"): # full scan
+                if key not in merged:
+                    merged[key] = value
+        
+        filtered = [(k, v) for k, v in merged.items() if v != TOMBSTONE]
+        
+        path = self._new_sstable_path()
+        SSTable.write(path, sorted(filtered))
+    
+        for sstable in tables_to_merge:
+            os.remove(sstable.filepath)
+        
+        self._load_sstables()
+            
